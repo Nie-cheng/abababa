@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body,p,h1,h2,h3,h4,h5,h6,ul,li,ol{margin:0px;padding:0px}
+        a{text-decoration:none;color:black}
+        ul,ol{list-style:none}
+        .character{
+            height: 80px;
+            width: 70px;
+            background-image:url(./img/下.png) ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            margin: auto;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="character"></div>
+    <script>
+        var characterEI=document.querySelector('.character')
+        var X=0
+        var Y=0
+        var maxX = (document.documentElement.clientWidth - 70) / 2
+        var maxY = (document.documentElement.clientHeight - 80) / 2
+        document.documentElement.onkeydown = function(){
+            switch (event.keyCode) {
+                case 37:
+                    characterEI.style.backgroundImage='url(./img/左.png)'
+                    if (X>-maxX) {
+                        X-=10
+                        characterEI.style.transform=`translate(${X}px,${Y}px)`
+                    }
+                    break;
+                case 38:
+                    characterEI.style.backgroundImage='url(./img/上.png)'
+                    if (Y>-maxY) {
+                        Y-=10
+                        characterEI.style.transform=`translate(${X}px,${Y}px)`                       
+                    }
+                    break;
+                case 39:
+                    characterEI.style.backgroundImage='url(./img/右.png)'
+                    if (X<maxX) {
+                        X+=10
+                        characterEI.style.transform=`translate(${X}px,${Y}px)`                  
+                    }
+                    break;
+                case 40:
+                    characterEI.style.backgroundImage='url(./img/下.png)'
+                     if (Y<maxY) {
+                        Y+=10
+                        characterEI.style.transform=`translate(${X}px,${Y}px)`                       
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
