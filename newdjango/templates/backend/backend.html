@@ -1,0 +1,162 @@
+{% extends 'backend/base.html' %}
+{% block article %}
+	<table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>文章标题</th>
+                <th>发布时间</th>
+                <th>点赞数</th>
+                <th>评论数</th>
+                <th>操作</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article_obj in article_queryset %}
+            	<tr>
+                    <td><a href="/{{ user_obj.username }}/p/{{ article_obj.id }}">{{ article_obj.title }}</a></td>
+                    <td>{{ article_obj.create_time|date:'Y年m月d日' }}</td>
+                    <td>{{ article_obj.up_num }}</td>
+                    <td>{{ article_obj.comment_num }}</td>
+                    <td><a href="{% url 'article_edit' article_obj.id %}" class="btn btn-primary btn-xs">编辑</a></td>
+                    <td><a href="{% url 'article_delete' article_obj.id %}" class="btn btn-danger btn-xs delete">删除</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block category %}
+	<table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>分类</th>
+                <th>操作</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category_obj in category_queryset %}
+            	<tr>
+                    <td>{{ category_obj.name }}</td>
+                    <td><a href="{% url 'category_edit' category_obj.id %}" class="btn btn-primary btn-xs">编辑</a></td>
+                    <td><a href="{% url 'category_delete' category_obj.id %}" class="btn btn-danger btn-xs delete">删除</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block tag %}
+	<table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>标签</th>
+                <th>操作</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag_obj in tag_queryset %}
+            	<tr>
+                    <td>{{ tag_obj.name }}</td>
+                    <td><a href="{% url 'tag_edit' tag_obj.id %}" class="btn btn-primary btn-xs">编辑</a></td>
+                    <td><a href="{% url 'tag_delete' tag_obj.id %}" class="btn btn-danger btn-xs delete">删除</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block comment %}
+	<table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>内容</th>
+                <th>文章</th>
+                <th>操作</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment_obj in comment_queryset %}
+            	<tr>
+                    <td>{{ comment_obj.content }}</td>
+                    <td><a href="/{{ user_obj.username }}/p/{{ comment_obj.article.id }}">{{ comment_obj.article.title }}</a></td>
+                    <td><a href="{% url 'comment_delete' comment_obj.id %}" class="btn btn-danger btn-xs delete">删除</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block userinfo %}
+	<h3 class="text-center">用户信息</h3>
+    <form action="" method="post" id="userform">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">用户名：</label>
+            <input type="text" id="username" name="username" value="{{ user_obj.username }}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="email">邮箱：</label>
+            <input type="text" id="email" name="email" value="{{ user_obj.email }}" class="form-control">
+            <span id="email_msg" style="color: red"></span>
+        </div>
+        <div class="form-group">
+            <label for="phone">手机号：</label>
+            <input type="text" id="phone" name="phone" value="{{ user_obj.phone }}" class="form-control">
+            <span id="phone_msg" style="color: red"></span>
+        </div>
+        <div class="form-group">
+            <label for="site_name">站点名称：</label>
+            <input type="text" id="site_name" name="site_name" value="{{ blog.site_name }}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="site_name">站点标题：</label>
+            <input type="text" id="site_title" name="site_title" value="{{ blog.site_title }}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="site_theme">站点样式：</label>
+            <input type="file" id="site_theme" name="site_theme">
+        </div>
+        <input type="button" value="修改" id="edit_user" class="pull-right btn btn-primary">
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.delete').click(function (e) {
+            e.preventDefault()
+            let is_delete = confirm('是否删除')
+            if(is_delete){
+                window.location.href = $(this).attr('href')
+            }
+        })
+        $('#edit_user').click(function () {
+            let formData = new FormData()
+            $.each($('#userform').serializeArray(),function (index,obj) {
+                formData.append(obj.name,obj.value)
+            });
+            formData.append('site_theme',$('#site_theme')[0].files[0]);
+            $.ajax({
+                url:'/user/edit/',
+                type:'post',
+                processData:false,
+                contentType:false,
+                data:formData,
+                success:function (args) {
+                    if(args.code === 0){
+                        window.location.reload()
+                    }else{
+                        if(args.code === 1001){
+                            $('#email_msg').text(args.msg)
+                    }
+                        if(args.code === 1002){
+                            $('#phone_msg').text(args.msg)
+                    }
+                }
+            }
+        })})
+    </script>
+{% endblock %}

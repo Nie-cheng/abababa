@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+<script src="{% static 'js/jquery-3.7.1.min(1).js' %}"></script>
+<script src="{% static 'bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">博客园</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Link</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          {% if request.user.is_authenticated %}
+            <li><a href="#">{{ request.user.username }}</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多操作<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" data-toggle="modal" data-target=".bs-example-modal-lg">修改密码</a></li>
+                <li><a href="/set_avatar/">修改头像</a></li>
+                <li><a href="/backend/">后台管理</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="/logout/">退出登录</a></li>
+            </ul>
+            </li>
+          {% else %}
+          <li><a href="/login/">登录</a></li>
+          <li><a href="/register/">注册</a></li>
+          {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <h1 class="text-center">修改密码</h1>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" name="username" class="form-control" id="username" disabled value="{{ request.user.username }}">
+                </div>
+                <div class="form-group">
+                    <label for="old_password">旧密码</label>
+                    <input type="password" id="old_password" name="old_password" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="new_password">新密码</label>
+                    <input type="password" id="new_password" name="new_password" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="re_password">确认密码</label>
+                    <input type="password" id="re_password" name="re_password" class="form-control">
+                </div>
+                <div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="set_password">修改</button>
+                        <p><span style="color: red" id="password_msg" class="pull-right"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <h3 class="panel-title">ababababaabaa</h3>
+                </div>
+                <div class="panel-body">
+                    阿巴阿巴
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <ul class="media-list">
+                {% for article_obj in article_queryset %}
+                    <li class="media">
+                            <h4 class="media-heading"><a href="/{{ article_obj.blog.user.username }}/p/{{ article_obj.id }}">{{ article_obj.title }}</a>&nbsp;&nbsp;</h4>
+                        <div class="media-left">
+                            <a href="#">
+                            <img class="media-object" alt="" src='/media/{{ article_obj.blog.user.avatar }}' width="100px">&nbsp;&nbsp;
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            {{ article_obj.description }}&nbsp;&nbsp;
+                        </div>
+                        <div>
+                            <span><a href="/{{ article_obj.blog.user.username }}">{{ article_obj.blog.user.username }}</a>&nbsp;&nbsp;</span>
+                            <span>{{ article_obj.create_time|date:"Y-m-d" }}</span>
+                            <span>
+                                <span class="glyphicon glyphicon-comment"></span>
+                                <span>&nbsp;&nbsp;{{ article_obj.comment_num }}&nbsp;&nbsp;</span>
+                            </span>
+                            <span>
+                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                                <span>&nbsp;&nbsp;{{ article_obj.up_num }}&nbsp;&nbsp;</span>
+                            </span>
+                            <span>
+                                <span class="glyphicon glyphicon-thumbs-down"></span>
+                                <span>&nbsp;&nbsp;{{ article_obj.down_num }}&nbsp;&nbsp;</span>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <h3 class="panel-title">ababababaabaa</h3>
+                </div>
+                <div class="panel-body">
+                    阿巴阿巴
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#set_password').click(function () {
+        $.ajax({
+            'url':'/set_password/',
+            'type':'post',
+            data:{
+                'old_password':$('#old_password').val(),
+                'new_password':$('#new_password').val(),
+                're_password':$('#re_password').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success:function (args) {
+                if (args.code === 0){
+                    window.location.reload()
+                }else{
+                    $('#password_msg').text(args.msg)
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

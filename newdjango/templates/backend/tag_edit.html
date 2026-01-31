@@ -1,0 +1,10 @@
+{% extends 'backend/base.html' %}
+
+{% block edit %}
+	<h3>标签编辑</h3>
+    <form action="" method="post">
+    {% csrf_token %}
+    标签：<input type="text" name="name" value="{{ tag_obj.name }}">
+        <input type="submit" class="btn btn-primary">
+    </form>
+{% endblock %}

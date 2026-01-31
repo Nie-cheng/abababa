@@ -1,0 +1,39 @@
+{% extends 'backend/base.html' %}
+
+{% block content %}
+	<h3 class="text-center">文章编辑</h3>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">标题：</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ article_obj.title }}">
+        </div>
+        <div class="form-group">
+            <label for="content" style="vertical-align:top">内容：</label>
+            <textarea name="content" id="content" cols="30" rows="10">
+                {{ article_obj.content }}
+            </textarea>
+        </div>
+        <div class="form-group">
+            <label for="">分类：</label>
+            {% for category_obj in category_queryset %}
+                {% if category_obj == article_obj.category %}
+                    <input type="radio" name="category_id" value="{{ category_obj.id }}" checked id="category_{{ category_obj.id }}">{{ category_obj.name }}
+                {% else %}
+                    <input type="radio" name="category_id" value="{{ category_obj.id }}" id="category_{{ category_obj.id }}">{{ category_obj.name }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="">标签：</label>
+            {% for tag_obj in tag_queryset %}
+                {% if tag_obj in article_obj.tag.all %}
+                    <input type="checkbox" name="tags" value="{{ tag_obj.id }}" checked id="tag_{{ tag_obj.id }}">{{ tag_obj.name }}
+                {% else %}
+                    <input type="checkbox" name="tags" value="{{ tag_obj.id }}" id="tag_{{ tag_obj.id }}">{{ tag_obj.name }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <input type="submit" value="编辑" class="btn btn-success">
+    </form>
+{% endblock %}

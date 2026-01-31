@@ -1,0 +1,29 @@
+{% extends 'backend/base.html' %}
+{% block content %}
+	<h3 class="text-center">修改头像</h3>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="oldimg">
+            <p>原头像：<img src="/media/{{ request.user.avatar }}" alt="" width="200px" id="oldimg"></p>
+        </label>
+        <p>
+        <label for='myfile'>
+            新头像：<img src="/static/images/default.png" alt="" width="200px" id="myimg">
+            <input type="file" id="myfile" name="file" style="display: none">
+        </label>
+        </p>
+        <input type="submit" class="btn btn-primary">
+    </form>
+{% endblock %}
+{% block js %}
+    <script>
+        $('#myfile').change(function () {
+        let filereader = new FileReader()
+        let file = $(`#myfile`)[0].files[0];
+        filereader.readAsDataURL(file)
+        filereader.onload = function () {
+            $(`#myimg`).attr('src', filereader.result)
+        }
+    })
+    </script>
+{% endblock %}

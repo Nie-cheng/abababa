@@ -1,0 +1,10 @@
+{% extends 'backend/base.html' %}
+
+{% block edit %}
+	<h3>分类编辑</h3>
+    <form action="" method="post">
+    {% csrf_token %}
+    分类：<input type="text" name="name" value="{{ category_obj.name }}">
+        <input type="submit" class="btn btn-primary">
+    </form>
+{% endblock %}

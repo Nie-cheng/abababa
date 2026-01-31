@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul class="media-list">
+                {% for article_obj in article_list %}
+                    <li class="media">
+                            <h4 class="media-heading"><a href="/{{ username }}/p/{{ article_obj.id }}">{{ article_obj.title }}</a>&nbsp;&nbsp;</h4>
+                        <div class="media-body">
+                            {{ article_obj.description }}&nbsp;&nbsp;
+                        </div>
+                        <div class="pull-right">
+                            <span>posted@</span>
+                            <span>{{ article_obj.create_time|date:"Y-m-d" }}</span>
+                            <span><a href="/{{ article_obj.blog.user.username }}">{{ article_obj.blog.user.username }}</a>&nbsp;&nbsp;</span>
+                            <span>
+                                <span class="glyphicon glyphicon-comment"></span>
+                                <span>&nbsp;&nbsp;{{ article_obj.comment_num }}&nbsp;&nbsp;</span>
+                            </span>
+                            <span>
+                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                                <span>&nbsp;&nbsp;{{ article_obj.up_num }}&nbsp;&nbsp;</span>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+
+            </ul>
+{% endblock %}
